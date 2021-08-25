@@ -14,7 +14,7 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTIO
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# financialwallet-qldb-crud-aws-sam
+
 
 # Build a simple CRUD operation & Data streams on Amazon QLDB using AWS Lambda, API Gateway, Amazon DynamoDB, Amazon Kinesis Data streams
 Protected Source with compensation liability. Patent pending. 
