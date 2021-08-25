@@ -1,0 +1,309 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this
+# software and associated documentation files (the "Software"), to deal in the Software
+# without restriction, including without limitation the rights to use, copy, modify,
+# merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+#Build a simple CRUD operation & Data streams on Amazon QLDB using AWS Lambda, API Gateway, Amazon DynamoDB, Amazon Kinesis Data streams
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  financialwallet-qldb-crud-aws-sam
+
+  Sample SAM Template for financialwallet-qldb-crud-aws-sam
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    CodeUri: api/
+    Runtime: nodejs14.x
+    Timeout: 10
+
+Resources:
+  createtablefunc:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: capmywallet-qldb.qldb
+      Policies:
+      - Statement:
+        - Sid: qldbcreatetableiam
+          Effect: Allow
+          Action:
+          - qldb:SendCommand
+          - qldb:PartiQLCreateTable
+          Resource: !Sub "arn:aws:qldb:${AWS::Region}:${AWS::AccountId}:ledger/*"
+      Events:
+        Createtable:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /createtable
+            Method: post
+  indexfunc:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: capmywallet-qldb.index
+      Policies:
+      - Statement:
+        - Sid: qldbindexiam
+          Effect: Allow
+          Action:
+          - qldb:PartiQLCreateIndex
+          - qldb:SendCommand
+          Resource: !Sub "arn:aws:qldb:${AWS::Region}:${AWS::AccountId}:ledger/*"
+      Events:
+        Index:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /index
+            Method: post
+  createaccountfunc:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: capmywallet-qldb.qldbcreateaccount
+      Policies:
+      - Statement:
+        - Sid: qldbcreateaccountiam
+          Effect: Allow
+          Action:
+          - dynamodb:PutItem
+          - qldb:UpdateLedger
+          - qldb:UpdateLedgerPermissionsMode
+          - qldb:GetBlock
+          - qldb:GetDigest
+          - qldb:GetRevision
+          - qldb:SendCommand
+          - qldb:ExecuteStatement
+          - qldb:InsertSampleData
+          - qldb:PartiQLCreateTable
+          - qldb:PartiQLCreateIndex
+          - qldb:PartiQLDropTable
+          - qldb:PartiQLDropIndex
+          - qldb:PartiQLUndropTable
+          - qldb:PartiQLDelete
+          - qldb:PartiQLInsert
+          - qldb:PartiQLUpdate
+          - qldb:PartiQLSelect
+          - qldb:PartiQLHistoryFunction
+          Resource: 
+          - !Sub "arn:aws:qldb:${AWS::Region}:${AWS::AccountId}:ledger/*"
+          - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/captable1"
+      Events:
+        Createaccount:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /createaccount
+            Method: post
+  
+  checkfundsfunc:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: capmywallet-qldb.qldbgetfunds
+      Policies:
+      - Statement:
+        - Sid: qldbcheckfundsiam
+          Effect: Allow
+          Action:
+          - qldb:ListLedgers
+          - qldb:DescribeLedger
+          - qldb:GetBlock
+          - qldb:GetDigest
+          - qldb:GetRevision
+          - qldb:SendCommand
+          - qldb:ExecuteStatement
+          - qldb:ShowCatalog
+          - qldb:InsertSampleData
+          - qldb:PartiQLCreateTable
+          - qldb:PartiQLCreateIndex
+          - qldb:PartiQLDropTable
+          - qldb:PartiQLDropIndex
+          - qldb:PartiQLUndropTable
+          - qldb:PartiQLDelete
+          - qldb:PartiQLInsert
+          - qldb:PartiQLUpdate
+          - qldb:PartiQLSelect
+          - qldb:PartiQLHistoryFunction
+          Resource: !Sub "arn:aws:qldb:${AWS::Region}:${AWS::AccountId}:ledger/*"
+      Events:
+        Checkfunds:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /checkfunds
+            Method: post
+  
+  addfundsfunc:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: capmywallet-qldb.qldbaddfunds
+      Policies:
+      - Statement:
+        - Sid: qldbaddfundsiam
+          Effect: Allow
+          Action:
+          - qldb:ListLedgers
+          - qldb:DescribeLedger
+          - qldb:GetBlock
+          - qldb:GetDigest
+          - qldb:GetRevision
+          - qldb:SendCommand
+          - qldb:ExecuteStatement
+          - qldb:ShowCatalog
+          - qldb:InsertSampleData
+          - qldb:PartiQLCreateTable
+          - qldb:PartiQLCreateIndex
+          - qldb:PartiQLDropTable
+          - qldb:PartiQLDropIndex
+          - qldb:PartiQLUndropTable
+          - qldb:PartiQLDelete
+          - qldb:PartiQLInsert
+          - qldb:PartiQLUpdate
+          - qldb:PartiQLSelect
+          - qldb:PartiQLHistoryFunction
+          Resource: !Sub "arn:aws:qldb:${AWS::Region}:${AWS::AccountId}:ledger/*"
+      Events:
+        Addfunds:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /addfunds
+            Method: post          
+  
+  withdrawfundsfunc:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: capmywallet-qldb.qldbwithdrawfunds
+      Policies:
+      - Statement:
+        - Sid: qldbwithdrawfundsiam
+          Effect: Allow
+          Action:
+          - qldb:ListLedgers
+          - qldb:DescribeLedger
+          - qldb:GetBlock
+          - qldb:GetDigest
+          - qldb:GetRevision
+          - qldb:SendCommand
+          - qldb:ExecuteStatement
+          - qldb:ShowCatalog
+          - qldb:InsertSampleData
+          - qldb:PartiQLCreateTable
+          - qldb:PartiQLCreateIndex
+          - qldb:PartiQLDropTable
+          - qldb:PartiQLDropIndex
+          - qldb:PartiQLUndropTable
+          - qldb:PartiQLDelete
+          - qldb:PartiQLInsert
+          - qldb:PartiQLUpdate
+          - qldb:PartiQLSelect
+          - qldb:PartiQLHistoryFunction
+          Resource: !Sub "arn:aws:qldb:${AWS::Region}:${AWS::AccountId}:ledger/*"
+      Events:
+        Withdrawfunds:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /withdrawfunds
+            Method: post    
+            
+ 
+  CapmywalletqldbDynamoDbTable: # Amazon DynamoDB creation for storing user account and profile details
+    Type: 'AWS::DynamoDB::Table'
+#   DeletionPolicy: Retain
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "email"
+          AttributeType: "S"   
+      KeySchema:
+        - AttributeName: "email"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      StreamSpecification:
+        StreamViewType: "NEW_AND_OLD_IMAGES"
+      TableName: "captable1"          
+  CapQLDBStream: # Create Amazon Kinesis Data Stream integration with Amazon QLDB ledger. The resource is dependent on the creation of the Amazon QLDB ledger
+      Type: "AWS::QLDB::Stream"
+      Properties:
+        InclusiveStartTime: "2020-05-29T00:00:00Z"
+        KinesisConfiguration:
+          AggregationEnabled: true
+          StreamArn: !GetAtt CapmywalletqldbKinesisStream.Arn
+        LedgerName: "captable1"
+        RoleArn: !GetAtt QLDBStreamRole.Arn
+        StreamName: "captable1-qldb-stream"
+      DependsOn: CapmywalletqldbLedger
+  CapmywalletqldbKinesisStream: # Create Amazon Kinesis Data Stream. 
+    Type: "AWS::Kinesis::Stream"
+    Properties: 
+      Name: "captable1-kinesis-stream"
+      RetentionPeriodHours: 168
+      ShardCount: 3
+  CapmywalletqldbLedger:  # Create Amazon QLDB ledger. Delete the ledger when the stack is deleted.  
+    Type: "AWS::QLDB::Ledger"
+    Properties: 
+      DeletionProtection: false
+      Name: "captable1"
+      PermissionsMode: "STANDARD"
+  QLDBStreamRole: # Create IAM role with permissions for connecting Amazon Kinesis Data Streams to Amazon QLD Ledger
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Sub 'captableStream-${AWS::AccountId}-${AWS::Region}'
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+              - qldb.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                - 'kinesis:PutRecord*'
+                - 'kinesis:DescribeStream'
+                - 'kinesis:ListShards'
+                Resource: '*'
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  CreatetableApi:
+    Description: "API Gateway endpoint URL for Prod stage for QLDB Create table function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/createtable/"
+  IndexApi:
+    Description: "API Gateway endpoint URL for Prod stage for QLDB table index function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/index/"
+  CreateaccountApi:
+    Description: "API Gateway endpoint URL for Prod stage for QLDB Create account in the table function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/createaccount/"  
+  CheckfundsApi:
+    Description: "API Gateway endpoint URL for Prod stage for QLDB check funds in the table function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/checkfunds/"
+  AddfundsApi:
+    Description: "API Gateway endpoint URL for Prod stage for QLDB add funds in the table function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/addfunds/"
+  WithdrawfundsApi:
+    Description: "API Gateway endpoint URL for Prod stage for QLDB withdraw funds in the table function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/withdrawfunds/"
+  DynamoDBtableName:
+    Description: "DynamoDB table name"
+    Value: !Ref CapmywalletqldbDynamoDbTable
+  QLDBLedgerName:
+    Description: "Amazon QLDB ledger name"
+    Value: !Ref CapmywalletqldbLedger

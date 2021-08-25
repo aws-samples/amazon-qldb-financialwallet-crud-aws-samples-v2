@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "financial-qldb-wallet"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-7ci5mjv20398"
+s3_prefix = "financial-qldb-wallet"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_NAMED_IAM"

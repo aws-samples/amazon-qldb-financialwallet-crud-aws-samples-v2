@@ -1,0 +1,19 @@
+{
+  "name": "capmywallet-qldb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "anurag jain",
+  "license": "ISC",
+  "dependencies": {
+    "amazon-qldb-driver-nodejs": "^1.0.0",
+    "aws-sdk": "^2.947.0",
+    "ion-js": "^4.0.0",
+    "jsbi": "^3.1.2",
+    "serverless-iam-roles-per-function": "^3.2.0",
+    "uuid": "^8.3.2"
+  }
+}
