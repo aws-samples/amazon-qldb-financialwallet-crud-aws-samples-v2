@@ -53,7 +53,7 @@ module.exports.qldb = function (event, context, callback) {
    body: JSON.stringify({message: `Created ${tablename} in QLDB success`, 
                       statuscode: 201,
                       status: `${tablename} table created`,
-                      author: "Protected code owner- janura@amazon.com"
+                      author: "Protected code owner- "
    }),
   };
 
@@ -122,7 +122,7 @@ module.exports.qldbcreateaccount = function (event, context, callback) {
         body: JSON.stringify({message: "Account creation failed in Userprofile DB", 
                       statuscode: 200,
                       status: "Account creation Unsuccess",
-                      author: 'Protected code owner- janura@amazon.com'
+                      author: 'Protected code owner- '
    }),
   };
 
@@ -136,7 +136,7 @@ module.exports.qldbcreateaccount = function (event, context, callback) {
                       status: `${email} account added`,
                       CurrentBalance: 0,
                       PreviousBalance: 0,
-                      author: 'Protected code owner- janura@amazon.com'
+                      author: 'Protected code owner- '
    }),
   };
 
@@ -155,7 +155,7 @@ module.exports.qldbcreateaccount = function (event, context, callback) {
         body: JSON.stringify({message: "Account creation failed", 
                       statuscode: 200,
                       status: "Account creation Unsuccess. Account exists",
-                      author: 'Protected code owner- janura@amazon.com'
+                      author: 'Protected code owner- '
    }),
   };
 
@@ -196,7 +196,7 @@ module.exports.index = function (event, context, callback) {
     statusCode: 201,
    body: JSON.stringify({message: `Initiated index creation in QLDB table`, 
                       statuscode: 201,
-                      author: "Protected code owner- janura@amazon.com"
+                      author: "Protected code owner- "
    }),
   };
 
@@ -296,7 +296,7 @@ module.exports.qldbaddfunds = function (event, context, callback) {
                       statuscode: 200,
                       CurrentBalance: new_currentbalance,
                       PreviousBalance: new_previousbalance,
-                      author: 'Protected code owner- janura@amazon.com'
+                      author: 'Protected code owner- '
    }),
       };
 
@@ -310,7 +310,7 @@ module.exports.qldbaddfunds = function (event, context, callback) {
         statusCode: 200,
         body: JSON.stringify({message: `User does not exist`, 
                       statuscode: 200,
-                      author: 'Protected code owner- janura@amazon.com'
+                      author: 'Protected code owner- '
    }),
       };
 
@@ -381,7 +381,7 @@ module.exports.qldbwithdrawfunds = function (event, context, callback) {
                       statuscode: 200,
                       CurrentBalance: new_currentbalance,
                       PreviousBalance: new_previousbalance,
-                      author: 'Protected code owner- janura@amazon.com'
+                      author: 'Protected code owner- '
    }),
       };
 
@@ -397,7 +397,7 @@ module.exports.qldbwithdrawfunds = function (event, context, callback) {
                       statuscode: 200,
                       CurrentBalance: currentbalance,
                       PreviousBalance: previousbalance,
-                      author: 'Protected code owner- janura@amazon.com'
+                      author: 'Protected code owner- '
    }),
       };
 
@@ -409,7 +409,7 @@ module.exports.qldbwithdrawfunds = function (event, context, callback) {
           statusCode: 200,
           body: JSON.stringify({message: `Invalid user does not exist`, 
                       statuscode: 200,
-                      author: 'Protected code owner- janura@amazon.com'
+                      author: 'Protected code owner- '
    }),
       };
 
