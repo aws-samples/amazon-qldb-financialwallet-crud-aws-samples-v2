@@ -17,7 +17,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 # Build a simple CRUD operation & Data streams on Amazon QLDB using AWS Lambda, API Gateway, Amazon DynamoDB, Amazon Kinesis Data streams
-Protected Source with compensation liability. Patent pending. 
+Protected Source with compensation liability. Patent pending. Update May 31 2023
 
 
 ## Solution Overview
